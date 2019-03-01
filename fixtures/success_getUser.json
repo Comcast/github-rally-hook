@@ -1,0 +1,21 @@
+{
+  "QueryResult": {
+    "_rallyAPIMajor": "2",
+    "_rallyAPIMinor": "0",
+    "Errors": [],
+    "Warnings": [],
+    "TotalResultCount": 1,
+    "StartIndex": 1,
+    "PageSize": 20,
+    "Results": [
+      {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/user/123456789",
+        "_refObjectUUID": "8563cc63-857a-414f-81ac-e5a0602af77a",
+        "_refObjectName": "A User",
+        "_type": "User"
+      }
+    ]
+  }
+}

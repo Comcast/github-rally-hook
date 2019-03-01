@@ -1,0 +1,6 @@
+{
+  "Disable": ["errcheck", "gas", "gocyclo", "gotypex", "gotype"],
+  "Vendor": true,
+  "Skip": ["vendor"],
+  "Deadline": "90s"
+}

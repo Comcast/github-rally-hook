@@ -1,0 +1,21 @@
+{
+  "QueryResult": {
+    "_rallyAPIMajor": "2",
+    "_rallyAPIMinor": "0",
+    "Errors": [],
+    "Warnings": [],
+    "TotalResultCount": 1,
+    "StartIndex": 1,
+    "PageSize": 20,
+    "Results": [
+      {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/12345678",
+        "_refObjectUUID": "f49ca3db-5faa-4e0b-8f81-3d9389e18cc4",
+        "_refObjectName": "ACompany",
+        "_type": "Workspace"
+      }
+    ]
+  }
+}

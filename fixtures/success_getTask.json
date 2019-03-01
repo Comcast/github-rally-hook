@@ -1,0 +1,21 @@
+{
+  "QueryResult": {
+    "_rallyAPIMajor": "2",
+    "_rallyAPIMinor": "0",
+    "Errors": [],
+    "Warnings": [],
+    "TotalResultCount": 1,
+    "StartIndex": 1,
+    "PageSize": 20,
+    "Results": [
+      {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/task/123456789",
+        "_refObjectUUID": "673377da-6634-409f-a545-b95acacd8661",
+        "_refObjectName": "A Test Task",
+        "_type": "Task"
+      }
+    ]
+  }
+}

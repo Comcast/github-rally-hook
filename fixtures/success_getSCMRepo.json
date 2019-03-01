@@ -1,0 +1,21 @@
+{
+  "QueryResult": {
+    "_rallyAPIMajor": "2",
+    "_rallyAPIMinor": "0",
+    "Errors": [],
+    "Warnings": [],
+    "TotalResultCount": 1,
+    "StartIndex": 1,
+    "PageSize": 20,
+    "Results": [
+      {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/scmrepository/123456789",
+        "_refObjectUUID": "02cf5da4-346d-4396-87a0-5e0552dbe749",
+        "_refObjectName": "rally-github-service",
+        "_type": "SCMRepository"
+      }
+    ]
+  }
+}

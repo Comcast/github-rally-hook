@@ -1,0 +1,49 @@
+{
+  "CreateResult": {
+    "_rallyAPIMajor": "2",
+    "_rallyAPIMinor": "0",
+    "Errors": [],
+    "Warnings": [],
+    "Object": {
+      "_rallyAPIMajor": "2",
+      "_rallyAPIMinor": "0",
+      "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/scmrepository/123456789",
+      "_refObjectUUID": "02cf5da4-346d-4396-87a0-5e0552dbe749",
+      "_objectVersion": "1",
+      "_refObjectName": "rally-github-service",
+      "CreationDate": "2018-11-30T19:11:52.306Z",
+      "_CreatedAt": "just now",
+      "ObjectID": 270432330152,
+      "ObjectUUID": "02cf5da4-346d-4396-87a0-5e0552dbe749",
+      "VersionId": "1",
+      "Subscription": {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/subscription/123456789",
+        "_refObjectUUID": "d055147e-6bd5-48d9-b9d9-30214aed1d3d",
+        "_refObjectName": "An Enterprise",
+        "_type": "Subscription"
+      },
+      "Workspace": {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/123456789",
+        "_refObjectUUID": "f49ca3db-5faa-4e0b-8f81-3d9389e18cc4",
+        "_refObjectName": "ACompany",
+        "_type": "Workspace"
+      },
+      "Description": "GitHub-Service push Changesets",
+      "Name": "rally-github-service",
+      "Projects": {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/SCMRepository/123456789/Projects",
+        "_type": "Project",
+        "Count": 0
+      },
+      "SCMType": "GitHub",
+      "Uri": "https://somegithub.com/ABC/rally-github-service",
+      "_type": "SCMRepository"
+    }
+  }
+}

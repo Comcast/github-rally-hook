@@ -1,0 +1,25 @@
+{
+  "id": "39820cb3e629a2e18d3f7bea03effd785904336e",
+  "tree_id": "5ce62f96d4cb4e2cfdc4c95894ae6df778addf0f",
+  "distinct": true,
+  "message": "US12345 - misnamed CompletionPercentage, TA12345 - completing task",
+  "timestamp": "2018-11-29T08:45:24-07:00",
+  "url": "https://somegithub.com/ABC/data-service/commit/39820cb3e629a2e18d3f7bea03effd785904336e",
+  "author": {
+    "name": "User",
+    "email": "auser@acompany.com"
+  },
+  "committer": {
+    "name": "user",
+    "email": "auser@acompany.com"
+  },
+  "added": [
+
+  ],
+  "removed": [
+
+  ],
+  "modified": [
+    "config/jobs.go"
+  ]
+}

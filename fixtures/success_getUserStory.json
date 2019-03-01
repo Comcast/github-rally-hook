@@ -1,0 +1,21 @@
+{
+  "QueryResult": {
+    "_rallyAPIMajor": "2",
+    "_rallyAPIMinor": "0",
+    "Errors": [],
+    "Warnings": [],
+    "TotalResultCount": 1,
+    "StartIndex": 1,
+    "PageSize": 20,
+    "Results": [
+      {
+        "_rallyAPIMajor": "2",
+        "_rallyAPIMinor": "0",
+        "_ref": "https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement/271167421104",
+        "_refObjectUUID": "ae49ad2e-3d01-4a14-9365-dc980281ef2a",
+        "_refObjectName": "A Test Story",
+        "_type": "HierarchicalRequirement"
+      }
+    ]
+  }
+}
