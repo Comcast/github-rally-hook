@@ -141,8 +141,26 @@ func (s *service) AddChangeSet(c Commit, scmrepo string, rallyRef map[string]str
 	var artifactRefs []Reference
 
 	if len(rallyRef) > 0 {
-		for _, v := range rallyRef {
+		for k, v := range rallyRef {
 			artifactRefs = append(artifactRefs, Reference{Ref: v})
+
+			//For each of the artifact references check and update scheduled state as required
+			starts, completes := s.checkForStatus(c.Message, k)
+
+			state := ""
+			if starts {
+				state = "In-Progress"
+			}
+
+			if completes {
+				state = "Completed"
+			}
+
+			if state != "" {
+				if err := s.UpdateState(v, state); err != nil {
+					fmt.Printf("Error updating state: %s", err.Error())
+				}
+			}
 		}
 	}
 	// Create a changeset
@@ -208,6 +226,38 @@ func (s *service) AddChangeSet(c Commit, scmrepo string, rallyRef map[string]str
 		}
 	}
 	return err
+}
+
+// UpdateState - updates schedulestate in rally
+func (s *service) UpdateState(ref string, state string) (err error) {
+
+	updatePayload := map[string]interface{}{
+		"HierarchicalRequirement": map[string]interface{}{
+			"ScheduleState": state,
+		},
+	}
+
+	b, _ := json.Marshal(updatePayload)
+	updateRequest, _ := http.NewRequest(http.MethodPost, ref, bytes.NewBuffer(b))
+	s.DecorateRequest(updateRequest)
+
+	updateResponse, err := s.client.Do(updateRequest)
+
+	if err != nil {
+		return
+	}
+	defer updateResponse.Body.Close()
+	var updateResult UpdateResult
+
+	if err = json.NewDecoder(updateResponse.Body).Decode(&updateResult); err != nil {
+		return err
+	}
+
+	if updateResult.OperationResult.Object.ScheduleState != state {
+		return fmt.Errorf("failed to update state - %s", updateResult.OperationResult.Errors)
+	}
+
+	return
 }
 
 func (s *service) AddChange(action string, changeset string, path string, uri string) error {
@@ -327,6 +377,30 @@ func (s *service) GetOrCreateSCMRepository(repo string, repoURL string, workspac
 
 func (s *service) DecorateRequest(req *http.Request) {
 	req.Header.Set("ZSESSIONID", s.cfg.APIToken)
+}
+
+// CheckForStatus - function takes a string as an argument and returns booleans for start and complete if the keywords are found
+func (s *service) checkForStatus(message string, artifactID string) (start bool, complete bool) {
+	start = false
+	complete = false
+
+	var (
+		startRegexString     = `(STARTS|BEGINS)\s` + artifactID
+		completesRegexString = `(COMPLETES|FINISHES)\s` + artifactID
+	)
+
+	startRegex := regexp.MustCompile(startRegexString)
+	completeRegex := regexp.MustCompile(completesRegexString)
+
+	if startRegex.MatchString(message) {
+		start = true
+	}
+
+	if completeRegex.MatchString(message) {
+		complete = true
+	}
+
+	return
 }
 
 func (s *service) FindRallyArtifact(commit Commit) (artifacts map[string]string) {

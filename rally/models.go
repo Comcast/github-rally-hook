@@ -295,3 +295,210 @@ type RallyCreateResult struct {
 		} `json:"Object"`
 	} `json:"CreateResult"`
 }
+
+type UpdateResult struct {
+	OperationResult struct {
+		RallyAPIMajor string        `json:"_rallyAPIMajor"`
+		RallyAPIMinor string        `json:"_rallyAPIMinor"`
+		Errors        []interface{} `json:"Errors"`
+		Warnings      []interface{} `json:"Warnings"`
+		Object        struct {
+			RallyAPIMajor string    `json:"_rallyAPIMajor"`
+			RallyAPIMinor string    `json:"_rallyAPIMinor"`
+			Ref           string    `json:"_ref"`
+			RefObjectUUID string    `json:"_refObjectUUID"`
+			ObjectVersion string    `json:"_objectVersion"`
+			RefObjectName string    `json:"_refObjectName"`
+			CreationDate  time.Time `json:"CreationDate"`
+			CreatedAt     string    `json:"_CreatedAt"`
+			ObjectID      int64     `json:"ObjectID"`
+			ObjectUUID    string    `json:"ObjectUUID"`
+			VersionID     string    `json:"VersionId"`
+			Subscription  struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				RefObjectName string `json:"_refObjectName"`
+				Type          string `json:"_type"`
+			} `json:"Subscription"`
+			Workspace struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				RefObjectName string `json:"_refObjectName"`
+				Type          string `json:"_type"`
+			} `json:"Workspace"`
+			Changesets struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Changesets"`
+			Connections struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Connections"`
+			CreatedBy struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				RefObjectName string `json:"_refObjectName"`
+				Type          string `json:"_type"`
+			} `json:"CreatedBy"`
+			Description string `json:"Description"`
+			Discussion  struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Discussion"`
+			DisplayColor                 string      `json:"DisplayColor"`
+			Expedite                     bool        `json:"Expedite"`
+			FormattedID                  string      `json:"FormattedID"`
+			LastUpdateDate               time.Time   `json:"LastUpdateDate"`
+			LatestDiscussionAgeInMinutes interface{} `json:"LatestDiscussionAgeInMinutes"`
+			Milestones                   struct {
+				RallyAPIMajor string        `json:"_rallyAPIMajor"`
+				RallyAPIMinor string        `json:"_rallyAPIMinor"`
+				Ref           string        `json:"_ref"`
+				Type          string        `json:"_type"`
+				TagsNameArray []interface{} `json:"_tagsNameArray"`
+				Count         int           `json:"Count"`
+			} `json:"Milestones"`
+			Name  string `json:"Name"`
+			Notes string `json:"Notes"`
+			Owner struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				RefObjectName string `json:"_refObjectName"`
+				Type          string `json:"_type"`
+			} `json:"Owner"`
+			Project struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				RefObjectName string `json:"_refObjectName"`
+				Type          string `json:"_type"`
+			} `json:"Project"`
+			Ready           bool `json:"Ready"`
+			RevisionHistory struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				Type          string `json:"_type"`
+			} `json:"RevisionHistory"`
+			Tags struct {
+				RallyAPIMajor string        `json:"_rallyAPIMajor"`
+				RallyAPIMinor string        `json:"_rallyAPIMinor"`
+				Ref           string        `json:"_ref"`
+				Type          string        `json:"_type"`
+				TagsNameArray []interface{} `json:"_tagsNameArray"`
+				Count         int           `json:"Count"`
+			} `json:"Tags"`
+			FlowState struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				RefObjectUUID string `json:"_refObjectUUID"`
+				RefObjectName string `json:"_refObjectName"`
+				Type          string `json:"_type"`
+			} `json:"FlowState"`
+			FlowStateChangedDate time.Time   `json:"FlowStateChangedDate"`
+			LastBuild            interface{} `json:"LastBuild"`
+			LastRun              interface{} `json:"LastRun"`
+			PassingTestCaseCount int         `json:"PassingTestCaseCount"`
+			ScheduleState        string      `json:"ScheduleState"`
+			ScheduleStatePrefix  string      `json:"ScheduleStatePrefix"`
+			TestCaseCount        int         `json:"TestCaseCount"`
+			Attachments          struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Attachments"`
+			Package       interface{} `json:"Package"`
+			AcceptedDate  interface{} `json:"AcceptedDate"`
+			Blocked       bool        `json:"Blocked"`
+			BlockedReason interface{} `json:"BlockedReason"`
+			Blocker       interface{} `json:"Blocker"`
+			Children      struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Children"`
+			DefectStatus string `json:"DefectStatus"`
+			Defects      struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Defects"`
+			DirectChildrenCount int         `json:"DirectChildrenCount"`
+			DragAndDropRank     string      `json:"DragAndDropRank"`
+			HasParent           bool        `json:"HasParent"`
+			InProgressDate      time.Time   `json:"InProgressDate"`
+			Iteration           interface{} `json:"Iteration"`
+			Parent              interface{} `json:"Parent"`
+			PlanEstimate        interface{} `json:"PlanEstimate"`
+			Predecessors        struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Predecessors"`
+			Recycled bool        `json:"Recycled"`
+			Release  interface{} `json:"Release"`
+			Risks    struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Risks"`
+			Successors struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Successors"`
+			TaskActualTotal    int    `json:"TaskActualTotal"`
+			TaskEstimateTotal  int    `json:"TaskEstimateTotal"`
+			TaskRemainingTotal int    `json:"TaskRemainingTotal"`
+			TaskStatus         string `json:"TaskStatus"`
+			Tasks              struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"Tasks"`
+			TestCaseStatus string `json:"TestCaseStatus"`
+			TestCases      struct {
+				RallyAPIMajor string `json:"_rallyAPIMajor"`
+				RallyAPIMinor string `json:"_rallyAPIMinor"`
+				Ref           string `json:"_ref"`
+				Type          string `json:"_type"`
+				Count         int    `json:"Count"`
+			} `json:"TestCases"`
+			Type string `json:"_type"`
+		} `json:"Object"`
+	} `json:"OperationResult"`
+}
