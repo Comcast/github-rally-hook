@@ -127,3 +127,23 @@ func GetChangeSetCount(apiKey string, storyID string) (cnt int, err error) {
 	}
 	return cnt, err
 }
+
+func GetStoryScheduledState(apiKey string, storyID string) (state string, err error) {
+	rallyClient := rallyresttoolkit.New(apiKey, "https://rally1.rallydev.com/slm/webservice/v2.0", &http.Client{})
+	hrclient := rallyresttoolkit.NewHierarchicalRequirement(rallyClient)
+
+	query := map[string]string{
+		"FormattedID": storyID,
+	}
+
+	hrs, err := hrclient.QueryHierarchicalRequirement(query)
+
+	if len(hrs) == 1 {
+		objectID := strconv.Itoa(hrs[0].ObjectID)
+		hr, _ := hrclient.GetHierarchicalRequirement(objectID)
+
+		state = hr.ScheduleState
+		fmt.Fprintf(os.Stderr, "Found state - %s\n", state)
+	}
+	return state, err
+}

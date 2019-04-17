@@ -32,10 +32,18 @@ The service currently looks for a small json configuration file in the working d
 5. Enter a secret if desired.
 6. Click "Add webhook".
 
+### Commit Message Format
+
+The hook will parse out Rally ID's from the commit message in the format of upper case D|DE|DS|TA|TC|S|US followed by a number of digits. The hook will also parse verbs in the form of STARTS|BEGINS and COMPLETES|FINISHES if they precede the rally identifier.
+
+```sh
+git commit -m "STARTS US12345 - this is a commit message"
+```
+The above commit message will attach a changeset and update the status of user story `US12345` to `In Progress`.
 
 ## Development
 ### Prerequisites
-The project has been tested with Go 11.1.5
+The project has been tested with Go 1.12.3
 
 ### Test
 1. Clone or download the source from GitHub.

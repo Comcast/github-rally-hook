@@ -30,15 +30,15 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/comcast/github-rally-hook/rally"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-kit/kit/log"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/ghttp"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/comcast/github-rally-hook/rally"
-	"github.com/onsi/gomega/ghttp"
+	"time"
 )
 
 var _ = Describe("A service connector for rally and github", func() {
@@ -53,6 +53,7 @@ var _ = Describe("A service connector for rally and github", func() {
 		fmt.Printf("STARTING SERVER>>>>\n")
 		server = ghttp.NewServer()
 		server.AllowUnhandledRequests = false
+		fmt.Printf("SERVER LISTENING ON %s\n", server.URL())
 	})
 
 	AfterEach(func() {
@@ -61,14 +62,13 @@ var _ = Describe("A service connector for rally and github", func() {
 	})
 
 	Describe("ReceivePush", func() {
+		var (
+			pushEvent    rally.PushEvent
+			pushResponse rally.PushResponse
+			err          error
+		)
 
 		Context("when called with a valid github push event", func() {
-
-			var (
-				pushEvent    rally.PushEvent
-				pushResponse rally.PushResponse
-				err          error
-			)
 			BeforeEach(func() {
 				// Read in JSON files
 				w, err := ioutil.ReadFile("../fixtures/success_getWorkspace.json")
@@ -155,6 +155,209 @@ var _ = Describe("A service connector for rally and github", func() {
 				pushResponse, err = svc.ReceivePush(ctx, pushEvent)
 				fmt.Println(pushResponse)
 				Expect(err).ShouldNot(HaveOccurred())
+				// Adding a small sleep to let the goroutine complete
+				time.Sleep(1 * time.Second)
+			})
+		})
+		Context("when called with a valid event and STARTS in the commit message", func() {
+			BeforeEach(func() {
+				// Read in JSON files
+				w, err := ioutil.ReadFile("../fixtures/success_getWorkspace.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				gs, err := ioutil.ReadFile("../fixtures/success_getSCMRepo.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				u, err := ioutil.ReadFile("../fixtures/success_getUser.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				us, err := ioutil.ReadFile("../fixtures/success_getUserStory.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+				ups, err := ioutil.ReadFile("../fixtures/success_updateStateStarts.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+				chset, err := ioutil.ReadFile("../fixtures/success_createChangeSet.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				ch, err := ioutil.ReadFile("../fixtures/success_createChange.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				pushReq, err := ioutil.ReadFile("../fixtures/sample_pushevent.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				err = json.NewDecoder(bytes.NewReader(pushReq)).Decode(&pushEvent)
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				server.AppendHandlers(
+					//Workspace get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/workspace"),
+						ghttp.RespondWith(http.StatusOK, string(w[:])),
+					),
+					//SCMRepo Get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/scmrepository"),
+						ghttp.RespondWith(http.StatusOK, string(gs[:])),
+					),
+					// User story get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/hierarchicalrequirement"),
+						ghttp.RespondWith(http.StatusOK, string(us[:])),
+					),
+					// User get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/user"),
+						ghttp.RespondWith(http.StatusOK, string(u[:])),
+					),
+					// Update scheduledstate
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/hierarchicalrequirement/271167421104"),
+						ghttp.RespondWith(http.StatusOK, string(ups[:])),
+					),
+					// create changeset response
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/changeset/create"),
+						ghttp.RespondWith(http.StatusOK, string(chset[:])),
+					),
+					// create change response
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/change/create"),
+						ghttp.RespondWith(http.StatusOK, string(ch[:])),
+					),
+				)
+
+				cfg = rally.Config{
+					RallyURL:  server.URL(),
+					APIToken:  "1234abcde",
+					Workspace: "Comcast",
+				}
+				pushEvent.Commits[0].Message = "STARTS US12345 - misnamed CompletionPercentage"
+				ctx = context.Background()
+				svc = rally.NewPushReceiveService(log.NewNopLogger(), cfg)
+			})
+			It("should update the status in rally and not return an error", func() {
+				pushResponse, err = svc.ReceivePush(ctx, pushEvent)
+				fmt.Println(pushResponse)
+				Expect(err).ShouldNot(HaveOccurred())
+				// Adding a small sleep to let the goroutine complete
+				time.Sleep(1 * time.Second)
+			})
+		})
+		Context("when called with a valid event and FINISHES in the commit message", func() {
+			BeforeEach(func() {
+				// Read in JSON files
+				w, err := ioutil.ReadFile("../fixtures/success_getWorkspace.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				gs, err := ioutil.ReadFile("../fixtures/success_getSCMRepo.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				u, err := ioutil.ReadFile("../fixtures/success_getUser.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				us, err := ioutil.ReadFile("../fixtures/success_getUserStory.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+				ups, err := ioutil.ReadFile("../fixtures/success_updateState.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+				chset, err := ioutil.ReadFile("../fixtures/success_createChangeSet.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				ch, err := ioutil.ReadFile("../fixtures/success_createChange.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				pushReq, err := ioutil.ReadFile("../fixtures/sample_pushevent.json")
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				err = json.NewDecoder(bytes.NewReader(pushReq)).Decode(&pushEvent)
+				if err != nil {
+					Skip(err.Error())
+				}
+
+				server.AppendHandlers(
+					//Workspace get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/workspace"),
+						ghttp.RespondWith(http.StatusOK, string(w[:])),
+					),
+					//SCMRepo Get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/scmrepository"),
+						ghttp.RespondWith(http.StatusOK, string(gs[:])),
+					),
+					// User story get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/hierarchicalrequirement"),
+						ghttp.RespondWith(http.StatusOK, string(us[:])),
+					),
+					// User get
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/user"),
+						ghttp.RespondWith(http.StatusOK, string(u[:])),
+					),
+					// Update scheduledstate
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/hierarchicalrequirement/271167421104"),
+						ghttp.RespondWith(http.StatusOK, string(ups[:])),
+					),
+					// create changeset response
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/changeset/create"),
+						ghttp.RespondWith(http.StatusOK, string(chset[:])),
+					),
+					// create change response
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/change/create"),
+						ghttp.RespondWith(http.StatusOK, string(ch[:])),
+					),
+				)
+				cfg = rally.Config{
+					RallyURL:  server.URL(),
+					APIToken:  "1234abcde",
+					Workspace: "Comcast",
+				}
+				pushEvent.Commits[0].Message = "COMPLETES US12345 - misnamed CompletionPercentage"
+				ctx = context.Background()
+				svc = rally.NewPushReceiveService(log.NewNopLogger(), cfg)
+			})
+			It("should update the status in rally and not return an error", func() {
+				pushResponse, err = svc.ReceivePush(ctx, pushEvent)
+				fmt.Println(pushResponse)
+				Expect(err).ShouldNot(HaveOccurred())
+				// Adding a small sleep to let the goroutine complete
+				time.Sleep(1 * time.Second)
 			})
 		})
 	})

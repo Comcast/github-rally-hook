@@ -105,6 +105,48 @@ var _ = Describe("Rally Github Service Integration Test", func() {
 			Expect(changeCount).Should(Equal(len(pushEvent.Commits)))
 		})
 	})
+	Context("when called with a valid payload and a state update in the commit message", func() {
+		BeforeEach(func() {
+			pushReq, err := ioutil.ReadFile("../fixtures/push_event.json")
+			if err != nil {
+				Skip(err.Error())
+			}
+
+			//Unmarshall json into struct and replace story ID
+			err = json.Unmarshal(pushReq, &pushEvent)
+			if err != nil {
+				Skip(err.Error())
+			}
+
+			if len(StoryID) == 0 {
+				Skip("story id is not set")
+			}
+			pushEvent.Commits[0].Message = fmt.Sprintf("STARTS %s - This is a test commmit message", StoryID)
+
+			bodyBytes, err := json.Marshal(pushEvent)
+			if err != nil {
+				Skip(err.Error())
+			}
+
+			client = &http.Client{}
+
+			request, err = http.NewRequest(http.MethodPost, targetURL, bytes.NewReader(bodyBytes))
+			if err != nil {
+				Skip(err.Error())
+			}
+
+		})
+		It("should update the state of the story and not return an error", func() {
+			response, err = client.Do(request)
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(response.StatusCode).Should(Equal(200))
+
+			// Sleep 20s to allow the goroutines making the push to rally to complete
+			time.Sleep(20 * time.Second)
+			state, _ := GetStoryScheduledState(APIKey, StoryID)
+			Expect(state).Should(Equal("In-Progress"))
+		})
+	})
 	Context("when called with a valid signed payload", func() {
 		BeforeEach(func() {
 			pushReq, err := ioutil.ReadFile("../fixtures/push_event.json")
@@ -153,7 +195,7 @@ var _ = Describe("Rally Github Service Integration Test", func() {
 			// Sleep 20s to allow the goroutines making the push to rally to complete
 			time.Sleep(20 * time.Second)
 			changeCount, _ := GetChangeSetCount(APIKey, StoryID)
-			Expect(changeCount).Should(Equal(2))
+			Expect(changeCount).Should(Equal(3))
 		})
 	})
 	Context("when called with an invalid signed payload", func() {
