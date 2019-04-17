@@ -5,7 +5,7 @@
     "Errors": [],
     "Warnings": [],
     "Object": {
-      "ScheduleState": "Completed",
+      "ScheduleState": "In-Progress",
       "_type": "HierarchicalRequirement"
     }
   }

@@ -231,6 +231,9 @@ func (s *service) AddChangeSet(c Commit, scmrepo string, rallyRef map[string]str
 // UpdateState - updates schedulestate in rally
 func (s *service) UpdateState(ref string, state string) (err error) {
 
+	parts := strings.Split(ref, "/")
+	storyID := parts[len(parts)-1]
+
 	updatePayload := map[string]interface{}{
 		"HierarchicalRequirement": map[string]interface{}{
 			"ScheduleState": state,
@@ -238,7 +241,7 @@ func (s *service) UpdateState(ref string, state string) (err error) {
 	}
 
 	b, _ := json.Marshal(updatePayload)
-	updateRequest, _ := http.NewRequest(http.MethodPost, ref, bytes.NewBuffer(b))
+	updateRequest, _ := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/slm/webservice/v2.0/hierarchicalrequirement/%s", s.cfg.RallyURL, storyID), bytes.NewBuffer(b))
 	s.DecorateRequest(updateRequest)
 
 	updateResponse, err := s.client.Do(updateRequest)

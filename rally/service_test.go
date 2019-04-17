@@ -30,15 +30,15 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/comcast/github-rally-hook/rally"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-kit/kit/log"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/ghttp"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/comcast/github-rally-hook/rally"
-	"github.com/onsi/gomega/ghttp"
+	"time"
 )
 
 var _ = Describe("A service connector for rally and github", func() {
@@ -53,6 +53,7 @@ var _ = Describe("A service connector for rally and github", func() {
 		fmt.Printf("STARTING SERVER>>>>\n")
 		server = ghttp.NewServer()
 		server.AllowUnhandledRequests = false
+		fmt.Printf("SERVER LISTENING ON %s\n", server.URL())
 	})
 
 	AfterEach(func() {
@@ -154,6 +155,8 @@ var _ = Describe("A service connector for rally and github", func() {
 				pushResponse, err = svc.ReceivePush(ctx, pushEvent)
 				fmt.Println(pushResponse)
 				Expect(err).ShouldNot(HaveOccurred())
+				// Adding a small sleep to let the goroutine complete
+				time.Sleep(1 * time.Second)
 			})
 		})
 		Context("when called with a valid event and STARTS in the commit message", func() {
@@ -178,7 +181,10 @@ var _ = Describe("A service connector for rally and github", func() {
 				if err != nil {
 					Skip(err.Error())
 				}
-
+				ups, err := ioutil.ReadFile("../fixtures/success_updateStateStarts.json")
+				if err != nil {
+					Skip(err.Error())
+				}
 				chset, err := ioutil.ReadFile("../fixtures/success_createChangeSet.json")
 				if err != nil {
 					Skip(err.Error())
@@ -220,6 +226,11 @@ var _ = Describe("A service connector for rally and github", func() {
 						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/user"),
 						ghttp.RespondWith(http.StatusOK, string(u[:])),
 					),
+					// Update scheduledstate
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/hierarchicalrequirement/271167421104"),
+						ghttp.RespondWith(http.StatusOK, string(ups[:])),
+					),
 					// create changeset response
 					ghttp.CombineHandlers(
 						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/changeset/create"),
@@ -231,6 +242,7 @@ var _ = Describe("A service connector for rally and github", func() {
 						ghttp.RespondWith(http.StatusOK, string(ch[:])),
 					),
 				)
+
 				cfg = rally.Config{
 					RallyURL:  server.URL(),
 					APIToken:  "1234abcde",
@@ -244,6 +256,8 @@ var _ = Describe("A service connector for rally and github", func() {
 				pushResponse, err = svc.ReceivePush(ctx, pushEvent)
 				fmt.Println(pushResponse)
 				Expect(err).ShouldNot(HaveOccurred())
+				// Adding a small sleep to let the goroutine complete
+				time.Sleep(1 * time.Second)
 			})
 		})
 		Context("when called with a valid event and FINISHES in the commit message", func() {
@@ -268,7 +282,10 @@ var _ = Describe("A service connector for rally and github", func() {
 				if err != nil {
 					Skip(err.Error())
 				}
-
+				ups, err := ioutil.ReadFile("../fixtures/success_updateState.json")
+				if err != nil {
+					Skip(err.Error())
+				}
 				chset, err := ioutil.ReadFile("../fixtures/success_createChangeSet.json")
 				if err != nil {
 					Skip(err.Error())
@@ -309,6 +326,11 @@ var _ = Describe("A service connector for rally and github", func() {
 					ghttp.CombineHandlers(
 						ghttp.VerifyRequest("GET", "/slm/webservice/v2.0/user"),
 						ghttp.RespondWith(http.StatusOK, string(u[:])),
+					),
+					// Update scheduledstate
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/slm/webservice/v2.0/hierarchicalrequirement/271167421104"),
+						ghttp.RespondWith(http.StatusOK, string(ups[:])),
 					),
 					// create changeset response
 					ghttp.CombineHandlers(
@@ -334,6 +356,8 @@ var _ = Describe("A service connector for rally and github", func() {
 				pushResponse, err = svc.ReceivePush(ctx, pushEvent)
 				fmt.Println(pushResponse)
 				Expect(err).ShouldNot(HaveOccurred())
+				// Adding a small sleep to let the goroutine complete
+				time.Sleep(1 * time.Second)
 			})
 		})
 	})
